@@ -1,5 +1,14 @@
 
 
+
+# ...existing code...
+
+# Register reload_bot command after bot is defined
+@bot.tree.command(name='reload_bot', description='Reload the bot process')
+async def reload_bot_command(interaction: discord.Interaction):
+    await reload_bot_cmd(interaction)
+
+
 import os
 import json
 import asyncio
@@ -35,12 +44,15 @@ scan_folders = config.get("scan_folders", [])
 servers = scan_servers(scan_folders)
 print(f"[INFO] Detected servers: {servers}")
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.guilds = True
-intents.messages = True
+bot = commands.Bot(command_prefix='/', intents=intents)
 
 bot = commands.Bot(command_prefix='/', intents=intents)
+
+# Register reload_bot command after bot is defined
+from commands.reload_bot import reload_bot as reload_bot_cmd
+@bot.tree.command(name='reload_bot', description='Reload the bot process')
+async def reload_bot_command(interaction: discord.Interaction):
+    await reload_bot_cmd(interaction)
 
 # File to store linked profiles
 LINKED_PROFILES_FILE = os.path.join('saved', 'linked_profiles.json')
@@ -187,6 +199,10 @@ from commands.create_server import create_server as create_server_cmd
 @app_commands.describe(name='Server name', version='Minecraft version', world='Optional world folder path')
 async def create_server(interaction: discord.Interaction, name: str, version: str, world: str = None):
     await create_server_cmd(interaction, name, version, world)
+    # Reload server list after server creation
+    global servers
+    servers = scan_servers(scan_folders)
+    print(f"[INFO] Reloaded servers: {servers}")
 
 if __name__ == '__main__':
     load_dotenv()
