@@ -4,3 +4,5 @@ venv
 .spec
 .env
 server_location.json
+__pycache__/
+saved/

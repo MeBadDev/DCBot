@@ -1,0 +1,3 @@
+ENABLE_LOGS: true  # Enable forwarding logs to a Discord channel
+ENABLE_COMMANDS: true  # Enable forwarding commands to a Discord channel
+ENABLE_COMMAND_REPLACEMENT: true  # stupid feature lmao. if a non-admin user sends a command targeting an admin, replaces the target with the non-admin user
