@@ -58,10 +58,17 @@ async def list_servers(interaction: discord.Interaction):
     if not server_names:
         await interaction.response.send_message('No servers found.', ephemeral=True)
         return
-    msg = '**Available Servers:**\n' + '\n'.join(f'- `{name}`' for name in server_names)
-    await interaction.response.send_message(msg, ephemeral=True)
 
+    embed = discord.Embed(title="Available Servers", color=discord.Color.blue())
+    for server_name in server_names:
+        server_info = servers[server_name]
+        embed.add_field(
+            name=server_name,
+            value=f"Version: {server_info['version']}\nPath: {server_info['path']}",
+            inline=False
+        )
 
+    await interaction.response.send_message(embed=embed)
 
 @bot.tree.command(name='start_server', description='Start a Minecraft server by name')
 @app_commands.describe(server_name='Name of the server to start')
