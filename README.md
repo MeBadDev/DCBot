@@ -1,11 +1,15 @@
 # Discord Minecraft Server Bot
 
 This bot allows you to manage a Minecraft server directly from Discord. It supports starting and stopping servers, executing commands, and logging events.
+[!CAUTION]
+> it's also hacked together in 40 minutes so I don't recommend it for production/real world use!
 
 ## Features
 - Start a Minecraft server with `/start_server [server_name]`.
 - Stop a running server with `/stop_server [server_name]`.
 - Execute commands in a dedicated channel for each server.
+> [!IMPORTANT]
+> **ANYONE** with 'send message' permission will be able to send command to the server!
 - Log server events and commands to a log channel.
 - Admin-only `/kill_bot` command to gracefully stop all servers and shut down the bot.
 

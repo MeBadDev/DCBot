@@ -1,5 +1,6 @@
 server_processes = {}
 command_channels = {}
+linked_profiles = {}
 
 import os
 import json
@@ -24,6 +25,16 @@ intents.guilds = True
 intents.messages = True
 
 bot = commands.Bot(command_prefix='/', intents=intents)
+
+# File to store linked profiles
+LINKED_PROFILES_FILE = 'linked_profiles.json'
+
+# Load existing linked profiles from file
+try:
+    with open(LINKED_PROFILES_FILE, 'r') as f:
+        linked_profiles = json.load(f)
+except FileNotFoundError:
+    linked_profiles = {}
 
 async def broadcast_log(channel, process):
     """Broadcast server logs to the log channel."""
@@ -186,6 +197,18 @@ async def kill_bot(interaction: discord.Interaction):
 
     # Shutdown the bot
     await bot.close()
+
+@bot.tree.command(name='link_profile', description='Link your Discord profile to a Minecraft username')
+@app_commands.describe(minecraft_username='Your Minecraft username')
+async def link_profile(interaction: discord.Interaction, minecraft_username: str):
+    linked_profiles[str(interaction.user.id)] = minecraft_username
+    # Save to JSON file
+    with open(LINKED_PROFILES_FILE, 'w') as f:
+        json.dump(linked_profiles, f, indent=4)
+    await interaction.response.send_message(
+        f"Successfully linked your profile to Minecraft username `{minecraft_username}`.", ephemeral=True
+    )
+    print(f"[LINK] {interaction.user} linked to Minecraft username '{minecraft_username}'.")
 
 if __name__ == '__main__':
     bot.run(TOKEN)
